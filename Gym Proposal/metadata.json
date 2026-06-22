@@ -1,0 +1,6 @@
+{
+  "name": "Gym Website Proposal",
+  "description": "A highly polished, premium single-page digital proposal for a custom gym web presence with interactive pricing and customized options.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
