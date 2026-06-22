@@ -584,22 +584,22 @@ export default function App() {
  const submitSignature = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    // 1. Force the UI to transition immediately so the user sees "DEAL COMPLETED" without delay
+    // 1. Force the UI to transition immediately so the user sees the success screen
     setIsAccepted(true);
     setIsSignModalOpen(false);
 
-    // 2. Prepare safe fallback data strings to pass along if any underlying variables are undefined
+    // 2. Prepare safe fallback data strings using your exact variable names
     const safeClientName = typeof clientName !== 'undefined' ? clientName : 'Unknown Name';
     const safeEmail = typeof contactEmail !== 'undefined' ? contactEmail : 'No Email provided';
     const safeSignature = typeof signatureText !== 'undefined' ? signatureText : 'Signed';
-    const safePrice = typeof currentPrice !== 'undefined' ? currentPrice : '0';
+    const safePrice = typeof currentPriceText !== 'undefined' ? currentPriceText : '0';
     const safeGymName = typeof gymName !== 'undefined' ? gymName : 'Sweat Hub Gym';
 
     const formData = { 
       clientName: safeClientName, 
       contactEmail: safeEmail, 
       signatureText: safeSignature, 
-      currentPrice: safePrice, 
+      currentPrice: safePrice, // Uses your safePrice string mapped from currentPriceText
       gymName: safeGymName 
     };
 
@@ -651,7 +651,7 @@ export default function App() {
             </div>
           </div>
         )}
-
+        
         {/* Header Ribbon Section */}
         <div className="hero-badge-loader flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-16 border-b-4 border-white pb-6">
           <div>
