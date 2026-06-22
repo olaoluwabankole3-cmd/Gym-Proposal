@@ -581,11 +581,28 @@ export default function App() {
     setTimeout(() => setCopied(false), 2000);
   };
 
-  const submitSignature = (e: React.FormEvent) => {
+  const submitSignature = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!clientName || !signatureText) return;
-    setIsSignModalOpen(false);
-    setIsAccepted(true);
+    if (!clientName || !contactEmail || !signatureText) return;
+
+    const formData = { clientName, contactEmail, signatureText, currentPrice, gymName };
+
+    try {
+      const response = await fetch("/submit", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData)
+      });
+
+      if (response.ok) {
+        setIsAccepted(true);
+        setIsSignModalOpen(false);
+      } else {
+        alert("Pipeline transmission dropped.");
+      }
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   const totalSelectedAddonsCount = Object.keys(selectedAddons).filter(k => selectedAddons[k]).length;
