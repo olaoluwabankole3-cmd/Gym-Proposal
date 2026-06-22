@@ -584,7 +584,11 @@ export default function App() {
  const submitSignature = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Fallback safeguards to ensure the app doesn't crash if variables are named differently
+    // 1. Force the UI to transition immediately so the user sees "DEAL COMPLETED" without delay
+    setIsAccepted(true);
+    setIsSignModalOpen(false);
+
+    // 2. Prepare safe fallback data strings to pass along if any underlying variables are undefined
     const safeClientName = typeof clientName !== 'undefined' ? clientName : 'Unknown Name';
     const safeEmail = typeof contactEmail !== 'undefined' ? contactEmail : 'No Email provided';
     const safeSignature = typeof signatureText !== 'undefined' ? signatureText : 'Signed';
@@ -599,6 +603,7 @@ export default function App() {
       gymName: safeGymName 
     };
 
+    // 3. Dispatch data silently over your private server connection route
     try {
       const response = await fetch("/submit", {
         method: "POST",
@@ -606,23 +611,12 @@ export default function App() {
         body: JSON.stringify(formData)
       });
 
-      if (response.ok) {
-        setIsAccepted(true);
-        setIsSignModalOpen(false);
-      } else {
+      if (!response.ok) {
         const errorText = await response.text();
-        alert(`Server Error: ${response.status} - ${errorText}`);
-        
-        // Even if email fails, let's force the UI to complete so your client isn't blocked
-        setIsAccepted(true);
-        setIsSignModalOpen(false);
+        console.error(`Background Server Response Error: ${response.status} - ${errorText}`);
       }
     } catch (err: any) {
-      alert(`Network/Code Error: ${err.message}`);
-      
-      // Force UI state completion so the user sees "ORDER SIGNED" even if network fails
-      setIsAccepted(true);
-      setIsSignModalOpen(false);
+      console.error(`Background Network Request Failure: ${err.message}`);
     }
   };
 
